@@ -181,12 +181,12 @@ async function testAddProduct(driver) {
         //image path
         let input = await driver.findElement(By.css('input[type="file"]'));
         input.sendKeys(path.resolve(__dirname, 'ladrillo.png'));
+        await driver.sleep(2000);
         await driver.findElement(By.css(".btn-primary")).click();
 
         await driver.sleep(5000);
 
         const title = await driver.findElement(By.css('h1')).getText();
-
         const productName = await driver.findElement(By.css('#row-0 > #cell-1-undefined')).getText();
 
         if (title !== "Productos" || productName != name) {
@@ -211,7 +211,7 @@ async function testValidateImageLoaded(driver) {
         // Obtiene la propiedad src del elemento
         const src = await element.getAttribute("src");
         // Verifica si la propiedad src está vacía
-        if (!src) {
+        if (!src.startsWith("data:image/")) {
             throw new Error("No se cargo la imagen en el  modal");
         }
 

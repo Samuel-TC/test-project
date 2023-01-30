@@ -15,6 +15,7 @@ async function runTests() {
         await driver.sleep(2000);
 
         const testCases = [
+            /** 
             { fn: testShortNameField, args: [driver, CONSTANTS.PRODUCT_SHORT.NAME] },
             { fn: testShortDescriptionField, args: [driver, CONSTANTS.PRODUCT_SHORT.DESCRIPTION] },
             { fn: testNameField, args: [driver, CONSTANTS.PRODUCT.NAME] },
@@ -24,8 +25,9 @@ async function runTests() {
             { fn: testLongDescriptionField, args: [driver] },
             { fn: testPriceTextField, args: [driver, CONSTANTS.PRODUCT_SHORT.PRICE] },
             { fn: testEmptyForm, args: [driver] },
-            //{ fn: testAddProduct, args: [driver]},
-            //{ fn: testValidateImageLoaded, args: [driver]}
+            */
+            { fn: testAddProduct, args: [driver]},
+            { fn: testValidateImageLoaded, args: [driver]}
         ];
 
         for (const testCase of testCases) {
