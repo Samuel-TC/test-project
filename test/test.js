@@ -1,5 +1,6 @@
 const { By, Key, Builder, until } = require("selenium-webdriver");
 const path = require('path');
+
 require("chromedriver");
 
 async function initializeDriver() {
@@ -36,8 +37,10 @@ async function testNameField(driver, nameProduct) {
         const nameValue = await driver.findElement(By.id(":ra:")).getAttribute("value");
         await driver.findElement(By.id(":ra:")).clear();
 
-        if (nameValue !== "X"+nameProduct) {
-            throw new Error("El valor del campo de nombre no es correcto");
+        if (nameValue !== "X" + nameProduct) {
+            console.error("❌ Fallo: El valor del campo de nombre no es correcto!");
+        } else {
+            console.log("✅ Exito: El valor del campo de nombre es correcto!");
         }
 
     } catch (error) {
@@ -51,8 +54,10 @@ async function testDescriptionField(driver, descriptionProduct) {
         await driver.findElement(By.id(":rc:")).sendKeys(descriptionProduct);
         const descriptionValue = await driver.findElement(By.id(":rc:")).getAttribute("value");
 
-        if (descriptionValue !== "X"+descriptionProduct) {
-            throw new Error("El valor del campo de descripción no es correcto");
+        if (descriptionValue !== "X" + descriptionProduct) {
+            console.error("❌ Fallo: El valor del campo de descripción no es correcto!");
+        } else {
+            console.log("✅ Exito: El valor del campo de descripción es correcto!");
         }
 
     } catch (error) {
@@ -67,8 +72,10 @@ async function testPriceField(driver, priceProduct) {
         await driver.findElement(By.id(":rd:")).sendKeys(priceProduct);
         const priceValue = await driver.findElement(By.id(":rd:")).getAttribute("value");
 
-        if (priceValue !== "0"+priceProduct) {
-            throw new Error("El valor del campo de precio no es correcto");
+        if (priceValue !== "0" + priceProduct) {
+            console.error("❌ Fallo: El valor del campo de precio no es correcto!");
+        } else {
+            console.log("✅ Exito: El valor del campo de precio es correcto!");
         }
 
     } catch (error) {
@@ -76,15 +83,18 @@ async function testPriceField(driver, priceProduct) {
     }
 }
 
-//Price
+
+//Price text
 async function testPriceTextField(driver, priceProduct) {
     try {
         await driver.findElement(By.id(":rd:")).clear();
         await driver.findElement(By.id(":rd:")).sendKeys(priceProduct);
         const priceValue = await driver.findElement(By.id(":rd:")).getAttribute("value");
 
-        if ( isNaN(priceValue)) {
-            throw new Error("El valor del campo de precio no es correcto");
+        if (isNaN(priceValue)) {
+            console.error("❌ Fallo: El valor del campo de precio no es correcto!");
+        } else {
+            console.log("✅ Exito: El valor del campo de precio es correcto!");
         }
 
     } catch (error) {
@@ -97,9 +107,10 @@ async function testShortNameField(driver, nameProduct) {
     try {
         await driver.findElement(By.id(":ra:")).sendKeys(nameProduct);
         const errorMessage = await driver.findElement(By.css('.form-floating .input-error')).getText();
-
         if (!errorMessage.includes("Se requieren al menos 5 carácteres")) {
-            throw new Error("No se ha mostrado el mensaje de error por nombre demasiado corto");
+            console.error("❌ Fallo: El mensaje de error esperado no se ha mostrado!");
+        } else {
+            console.log("✅ Exito: Prueba de nombre demasiado corto exitosa!");
         }
 
     } catch (error) {
@@ -114,7 +125,9 @@ async function testShortDescriptionField(driver, descriptionProduct) {
         const errorMessage = await driver.findElement(By.css('.col > div > .form-floating > .input-error')).getText();
 
         if (!errorMessage.includes("Se requieren al menos 5 carácteres")) {
-            throw new Error("No se ha mostrado el mensaje de error por descripcion demasiado corto");
+            console.error("❌ Fallo: El mensaje de error esperado no se ha mostrado!");
+        } else {
+            console.log("✅ Exito: Prueba de descripción demasiado corto exitosa!");
         }
 
     } catch (error) {
@@ -123,13 +136,14 @@ async function testShortDescriptionField(driver, descriptionProduct) {
 }
 
 //Long Name
-async function testLongNameField(driver) {
+async function testLongNameField(driver, nameProduct) {
     try {
-        await driver.findElement(By.id(":ra:")).sendKeys("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        const errorMessage = await driver.findElement(By.css('.col > div > .form-floating > .input-error')).getText();
-
+        await driver.findElement(By.id(":ra:")).sendKeys(nameProduct);
+        const errorMessage = await driver.findElement(By.css('.col:nth-child(1) > .form-floating:nth-child(1) > .input-error')).getText();
         if (!errorMessage.includes("El máximo es de 25 carácteres")) {
-            throw new Error("No se ha mostrado el mensaje de error por nombre demasiado largo");
+            console.error("❌ Fallo: El mensaje de error esperado no se ha mostrado!");
+        } else {
+            console.log("✅ Exito: Prueba de nombre demasiado largo exitosa!");
         }
 
     } catch (error) {
@@ -138,13 +152,15 @@ async function testLongNameField(driver) {
 }
 
 //Long Description
-async function testLongDescriptionField(driver) {
+async function testLongDescriptionField(driver, descriptionProduct) {
     try {
-        await driver.findElement(By.id(":rc:")).sendKeys("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        await driver.findElement(By.id(":rc:")).sendKeys(descriptionProduct);
         const errorMessage = await driver.findElement(By.css('.col > div > .form-floating > .input-error')).getText();
 
         if (!errorMessage.includes("El máximo es de 25 carácteres")) {
-            throw new Error("No se ha mostrado el mensaje de error por descripcion demasiado larga");
+            console.error("❌ Fallo: El mensaje de error esperado no se ha mostrado!");
+        } else {
+            console.log("✅ Exito: Prueba de descripción demasiado largo exitosa!");
         }
 
     } catch (error) {
@@ -157,11 +173,12 @@ async function testEmptyForm(driver) {
     try {
         await driver.findElement(By.css(".btn-primary")).click();
         const errorAlert = await driver.findElement(By.css('.swal2-popup'));
-
         const title = await driver.findElement(By.css('.login-form__title')).getText();
 
-        if (!errorAlert || title != "Agregar producto") {
-            throw new Error("No se ha mostrado el mensaje de error por datos invalidos");
+        if (!errorAlert || title !== "Agregar producto") {
+            console.error("❌ Fallo: No se ha mostrado la alerta de error por datos inválidos!");
+        } else {
+            console.log("✅ Exito: La alerta de error por datos inválidos se ha mostrado correctamente!");
         }
 
     } catch (error) {
@@ -190,7 +207,9 @@ async function testAddProduct(driver) {
         const productName = await driver.findElement(By.css('#row-0 > #cell-1-undefined')).getText();
 
         if (title !== "Productos" || productName != name) {
-            throw new Error("No se agrego el producto");
+            console.error("❌ Fallo: No se agrego el producto!");
+        } else {
+            console.log("✅ Exito: El producto se agrego correctamente!");
         }
 
     } catch (error) {
@@ -212,15 +231,18 @@ async function testValidateImageLoaded(driver) {
         const src = await element.getAttribute("src");
         // Verifica si la propiedad src está vacía
         if (!src.startsWith("data:image/")) {
-            throw new Error("No se cargo la imagen en el  modal");
+            console.error("❌ Fallo: No se cargo la imagen en el  modal!");
+        } else {
+            console.log("✅ Exito: Se cargo la imagen en el  modal!");
         }
 
     } catch (error) {
         console.error(error);
     }
     // Si la propiedad src no está vacía, la imagen se cargó correctamente
-    
 }
 
-module.exports = { login, testValidateImageLoaded, initializeDriver, closeDriver, testAddProduct, testDescriptionField, testNameField, testShortNameField,
-                    testShortDescriptionField, testLongNameField, testLongDescriptionField, testEmptyForm, testPriceField,testPriceTextField, openProductPage };
+module.exports = {
+    login, testValidateImageLoaded, initializeDriver, closeDriver, testAddProduct, testDescriptionField, testNameField, testShortNameField,
+    testShortDescriptionField, testLongNameField, testLongDescriptionField, testEmptyForm, testPriceField, testPriceTextField, openProductPage
+};
