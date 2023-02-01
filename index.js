@@ -12,24 +12,25 @@ async function runTests() {
         await login(driver, CONSTANTS.URL_LOGIN, "Admin", "123123")
 
         await openProductPage(driver, CONSTANTS.URL_PRODUCT);
-        await driver.sleep(2000);
+        await driver.sleep(1000);
 
         const testCases = [
-            /** 
+
             { fn: testShortNameField, args: [driver, CONSTANTS.PRODUCT_SHORT.NAME] },
             { fn: testShortDescriptionField, args: [driver, CONSTANTS.PRODUCT_SHORT.DESCRIPTION] },
             { fn: testNameField, args: [driver, CONSTANTS.PRODUCT.NAME] },
             { fn: testDescriptionField, args: [driver, CONSTANTS.PRODUCT.DESCRIPTION] },
             { fn: testPriceField, args: [driver, CONSTANTS.PRODUCT.PRICE] },
-            { fn: testLongNameField, args: [driver] },
-            { fn: testLongDescriptionField, args: [driver] },
+            { fn: testLongNameField, args: [driver, CONSTANTS.PRODUCT_LONG.NAME] },
+            { fn: testLongDescriptionField, args: [driver, CONSTANTS.PRODUCT_LONG.DESCRIPTION] },
             { fn: testPriceTextField, args: [driver, CONSTANTS.PRODUCT_SHORT.PRICE] },
             { fn: testEmptyForm, args: [driver] },
-            */
-            { fn: testAddProduct, args: [driver]},
-            { fn: testValidateImageLoaded, args: [driver]}
+
+            //{ fn: testAddProduct, args: [driver]},
+            //{ fn: testValidateImageLoaded, args: [driver]}
         ];
 
+        console.log("🧪 Start Test: 🧪");
         for (const testCase of testCases) {
             try {
                 await testCase.fn(...testCase.args);
@@ -37,6 +38,7 @@ async function runTests() {
                 console.error(`Test case failed: ${testCase.fn.name}\n`, error);
             }
         }
+        console.log("🧪 End Test: 🧪");
 
     } catch (error) {
         console.error(error);
